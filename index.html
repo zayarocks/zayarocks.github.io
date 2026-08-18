@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>zaya.rocks</title>
+
+<style>
+
+/* the inks ---------------------------------------------------------- */
+
+/*  two were chosen. the third is only ever where they meet.  */
+
+:root {
+  --ink:  #191614;
+  --lime: #c1e319;
+  --mono: ui-monospace, "DejaVu Sans Mono", Menlo, Consolas, monospace;
+}
+
+html { background: var(--ink); color: var(--lime); font: 17px/1.55 var(--mono) }
+body { margin: 0 }
+
+
+/* the page ---------------------------------------------------------- */
+
+/*  three rows: colour, name, colour. the bar takes the height it needs
+    and the halves take what is left, so the name is in the middle at
+    any size without being told where the middle is.  */
+
+header {
+  min-height: 100dvh;
+  display: grid;
+  grid-template-rows: 1fr auto 1fr;
+}
+
+
+/* the colour -------------------------------------------------------- */
+
+.rainbow {
+  background-image:
+    repeating-linear-gradient(to right,
+      rgb(255 255 255 / .03)  0      4.17%,  rgb(0 0 0 / .10)  4.17%  8.33%,
+      rgb(255 255 255 / .09)  8.33% 12.5%,   rgb(0 0 0 / .07) 12.5%  16.67%,
+      rgb(255 255 255 / .15) 16.67% 20.83%,  rgb(0 0 0 / .04) 20.83% 25%),
+    linear-gradient(to bottom,
+      #5e2b9a 0      8.33%,  #5141b3  8.33% 16.67%, #3758c5 16.67% 25%,
+      #006fd1 25%   33.33%,  #0086ce 33.33% 41.67%, #009cbe 41.67% 50%,
+      #00b0a5 50%   58.33%,  #35c286 58.33% 66.67%, #63d162 66.67% 75%,
+      #8adc3f 75%   83.33%,  #a8e42c 83.33% 91.67%, #c1e319 91.67% 100%);
+  background-blend-mode: soft-light;
+}
+
+.rainbow:last-of-type { transform: scaleY(-1) }
+
+
+/* the name ---------------------------------------------------------- */
+
+/*  it is 29 characters wide and 4 rows tall, and the numbers below
+    come out of those two facts rather than being picked:
+
+      29 characters at .6em is 17.4em, so (100vw - 40px) / 17.4 is the
+      largest it can be and still keep a margin at the edges;
+
+      the bar is 6.2em tall, so 7dvh holds it to about half a short
+      window instead of swallowing it;
+
+      30px is the ceiling — past that it stops being a mark.
+
+    the padding centres it: half the bar, less half the name, counted
+    in characters. grid and flex would each tear the lines apart, and
+    text-align centres every line on its own.  */
+
+header pre {
+  position:     sticky;
+  top:          0;
+  z-index:      1;
+  margin:       0;
+  padding:      1.1em max(1.25rem, calc(50% - 14.5ch));
+  background:   var(--ink);
+  border-block: 4px solid var(--ink);
+  font-family:  inherit;
+  font-size:    min(30px, calc((100vw - 40px) / 17.4), 7dvh);
+  line-height:  1;
+}
+
+/*  .rocks is lime. where a browser can clip a background to the shape
+    of the letters it is the ramp instead, running through them in
+    crests, each line a beat behind the one above — a crowd doing the
+    wave. where it cannot, it stays lime: asking and hoping is how
+    you end up with letters clipped to nothing.  */
+
+.tld { color: var(--lime) }
+
+@supports (background-clip: text) or (-webkit-background-clip: text) {
+  .tld {
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    background-image: linear-gradient(90deg in oklch decreasing hue,
+                                      oklch(92% .20 120), oklch(84% .16 300),
+                                      oklch(92% .20 120), oklch(84% .16 300),
+                                      oklch(92% .20 120));
+    background-size: 220% 100%;
+    -webkit-background-clip: text;
+            background-clip: text;
+    animation: wave 6s linear infinite;
+  }
+  .tld:nth-of-type(2) { animation-delay: -.30s }
+  .tld:nth-of-type(3) { animation-delay: -.60s }
+  .tld:nth-of-type(4) { animation-delay: -.90s }
+}
+
+@keyframes wave {
+  from { background-position:    0% 0 }
+  to   { background-position: -220% 0 }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tld { animation: none }
+}
+
+/*  the mark is drawn from block characters, so it is given to the eye
+    and hidden from the ear, which is handed the word instead.  */
+
+.visually-hidden {
+  position:    absolute;
+  width:       1px;
+  height:      1px;
+  margin:      -1px;
+  overflow:    hidden;
+  clip-path:   inset(50%);
+  white-space: nowrap;
+}
+
+</style>
+
+</head>
+<body>
+
+<header>
+
+  <div class="rainbow" aria-hidden="true"></div>
+
+  <h1 class="visually-hidden">zaya.rocks</h1>
+
+  <pre aria-hidden="true">            <span class="tld">           ▌     </span>
+▀▜▘▝▀▖▌ ▌▝▀▖<span class="tld">  ▙▀▖▞▀▖▞▀▖▌▗▘▞▀▘</span>
+▗▘ ▞▀▌▚▄▌▞▀▌<span class="tld">▗▖▌  ▌ ▌▌ ▖▛▚ ▝▀▖</span>
+▀▀▘▝▀▘▗▄▘▝▀▘<span class="tld">▝▘▘  ▝▀ ▝▀ ▘ ▘▀▀ </span></pre>
+
+  <div class="rainbow" aria-hidden="true"></div>
+
+</header>
+
+</body>
+</html>
+
