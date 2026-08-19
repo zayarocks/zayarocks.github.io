@@ -8,129 +8,98 @@
 <title>zaya.rocks</title>
 
 <style>
-
-/* the inks ---------------------------------------------------------- */
-
-/*  two were chosen. the third is only ever where they meet.  */
-
 :root {
   --ink:  #191614;
-  --lime: #c1e319;
+  --gold: #f4d660;
   --mono: ui-monospace, "DejaVu Sans Mono", Menlo, Consolas, monospace;
+
+  --cols: repeating-linear-gradient(to right,
+      rgb(255 255 255 / .03)  0      4.17%, rgb(0 0 0 / .10)  4.17%  8.33%,
+      rgb(255 255 255 / .09)  8.33% 12.5%,  rgb(0 0 0 / .07) 12.5%  16.67%,
+      rgb(255 255 255 / .15) 16.67% 20.83%, rgb(0 0 0 / .04) 20.83% 25%);
 }
 
-html { background: var(--ink); color: var(--lime); font: 17px/1.55 var(--mono) }
-body { margin: 0 }
-
-
-/* the page ---------------------------------------------------------- */
-
-/*  three rows: colour, name, colour. the bar takes the height it needs
-    and the halves take what is left, so the name is in the middle at
-    any size without being told where the middle is.  */
+html { color: #ffffff; font: 17px/1.55 var(--mono) }
+body { margin: 0; overflow: hidden }
 
 header {
-  min-height: 100dvh;
+  height: 100dvh;
   display: grid;
-  grid-template-rows: 1fr auto 1fr;
+  grid-template-rows: minmax(0, 1fr) auto minmax(0, 1fr);
 }
 
+/*  the rings widen and close again, very slowly, so the whole field
+    swells out of the bar and settles back into it. it is one property
+    on two elements — background-size — rather than anything moving,
+    and the hard stops mean the rings stay flat while they travel.  */
 
-/* the colour -------------------------------------------------------- */
-
-.rainbow {
-  background-image:
-    repeating-linear-gradient(to right,
-      rgb(255 255 255 / .03)  0      4.17%,  rgb(0 0 0 / .10)  4.17%  8.33%,
-      rgb(255 255 255 / .09)  8.33% 12.5%,   rgb(0 0 0 / .07) 12.5%  16.67%,
-      rgb(255 255 255 / .15) 16.67% 20.83%,  rgb(0 0 0 / .04) 20.83% 25%),
-    linear-gradient(to bottom,
-      #5e2b9a 0      8.33%,  #5141b3  8.33% 16.67%, #3758c5 16.67% 25%,
-      #006fd1 25%   33.33%,  #0086ce 33.33% 41.67%, #009cbe 41.67% 50%,
-      #00b0a5 50%   58.33%,  #35c286 58.33% 66.67%, #63d162 66.67% 75%,
-      #8adc3f 75%   83.33%,  #a8e42c 83.33% 91.67%, #c1e319 91.67% 100%);
+.field {
+  animation: ripple 54s cubic-bezier(.45,0,.55,1) infinite alternate;
+  /*  two layers, so every one of these needs two values. a single
+      background-size stretches the column overlay to the full width
+      as well, which turns the fine columns into one bar each — the
+      first value is the columns, the second is the rings.  */
+  background-size:     auto, 100% 100%;
+  background-repeat:   repeat, no-repeat;
+  background-position: 0 0, 50% 100%;
+  background-image: var(--cols), radial-gradient(circle at 50% 100%,
+      #f4d660 0.00% 8.33%,
+      #cad45d 8.33% 16.67%,
+      #99d06a 16.67% 25.00%,
+      #5ec97d 25.00% 33.33%,
+      #00c093 33.33% 41.67%,
+      #00b2a7 41.67% 50.00%,
+      #00a1b8 50.00% 58.33%,
+      #008dc3 58.33% 66.67%,
+      #0076c6 66.67% 75.00%,
+      #2e5dc1 75.00% 83.33%,
+      #4d44b1 83.33% 91.67%,
+      #5e2b9a 91.67% 100.00%);
   background-blend-mode: soft-light;
 }
 
-.rainbow:last-of-type { transform: scaleY(-1) }
+/*  rings from the point where the bar meets the colour, so the two
+    halves are one circle cut in half by the name  */
 
+.field:last-of-type { transform: scaleY(-1); animation-delay: -27s }
 
-/* the name ---------------------------------------------------------- */
-
-/*  it is 29 characters wide and 4 rows tall, and the numbers below
-    come out of those two facts rather than being picked:
-
-      29 characters at .6em is 17.4em, so (100vw - 40px) / 17.4 is the
-      largest it can be and still keep a margin at the edges;
-
-      the bar is 6.2em tall, so 7dvh holds it to about half a short
-      window instead of swallowing it;
-
-      30px is the ceiling — past that it stops being a mark.
-
-    the padding centres it: half the bar, less half the name, counted
-    in characters. grid and flex would each tear the lines apart, and
-    text-align centres every line on its own.  */
-
-header pre {
-  position:     sticky;
-  top:          0;
-  z-index:      1;
-  margin:       0;
-  padding:      1.1em max(1.25rem, calc(50% - 14.5ch));
-  background:   var(--ink);
-  border-block: 4px solid var(--ink);
-  font-family:  inherit;
-  font-size:    min(30px, calc((100vw - 40px) / 17.4), 7dvh);
-  line-height:  1;
+@keyframes ripple {
+  from { background-size: auto, 100% 100% }
+  to   { background-size: auto, 190% 190% }
 }
 
-/*  .rocks is lime. where a browser can clip a background to the shape
-    of the letters it is the ramp instead, running through them in
-    crests, each line a beat behind the one above — a crowd doing the
-    wave. where it cannot, it stays lime: asking and hoping is how
-    you end up with letters clipped to nothing.  */
+@media (prefers-reduced-motion: reduce) { .field { animation: none } }
 
-.tld { color: var(--lime) }
+pre {
+  margin: 0;
+  padding: 1.1em max(1.25rem, calc(50% - 14.5ch));
+  background: var(--ink);
+  border-block: 4px solid var(--ink);
+  font-family: inherit;
+  font-size: min(30px, calc((100vw - 40px) / 17.4), 7dvh);
+  line-height: 1;
+}
+
+.tld { color: var(--gold) }
 
 @supports (background-clip: text) or (-webkit-background-clip: text) {
   .tld {
     color: transparent;
     -webkit-text-fill-color: transparent;
-    background-image: linear-gradient(90deg in oklch decreasing hue,
-                                      oklch(92% .20 120), oklch(84% .16 300),
-                                      oklch(92% .20 120), oklch(84% .16 300),
-                                      oklch(92% .20 120));
+    background-image: linear-gradient(90deg,
+      #f4d660, #ffb3d9, #b3e0ff, #c9f0a0, #ffd28a, #f4d660);
     background-size: 220% 100%;
+    background-position: 0 0;
     -webkit-background-clip: text;
             background-clip: text;
-    animation: wave 6s linear infinite;
+    transition: background-position 14s ease-out;
   }
-  .tld:nth-of-type(2) { animation-delay: -.30s }
-  .tld:nth-of-type(3) { animation-delay: -.60s }
-  .tld:nth-of-type(4) { animation-delay: -.90s }
+  pre:hover .tld { background-position: -110% 0 }
 }
-
-@keyframes wave {
-  from { background-position:    0% 0 }
-  to   { background-position: -220% 0 }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .tld { animation: none }
-}
-
-/*  the mark is drawn from block characters, so it is given to the eye
-    and hidden from the ear, which is handed the word instead.  */
 
 .visually-hidden {
-  position:    absolute;
-  width:       1px;
-  height:      1px;
-  margin:      -1px;
-  overflow:    hidden;
-  clip-path:   inset(50%);
-  white-space: nowrap;
+  position: absolute; width: 1px; height: 1px; margin: -1px;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap;
 }
 
 </style>
@@ -139,20 +108,14 @@ header pre {
 <body>
 
 <header>
-
-  <div class="rainbow" aria-hidden="true"></div>
-
+  <div class="field" aria-hidden="true"></div>
   <h1 class="visually-hidden">zaya.rocks</h1>
-
   <pre aria-hidden="true">            <span class="tld">           ▌     </span>
 ▀▜▘▝▀▖▌ ▌▝▀▖<span class="tld">  ▙▀▖▞▀▖▞▀▖▌▗▘▞▀▘</span>
 ▗▘ ▞▀▌▚▄▌▞▀▌<span class="tld">▗▖▌  ▌ ▌▌ ▖▛▚ ▝▀▖</span>
 ▀▀▘▝▀▘▗▄▘▝▀▘<span class="tld">▝▘▘  ▝▀ ▝▀ ▘ ▘▀▀ </span></pre>
-
-  <div class="rainbow" aria-hidden="true"></div>
-
+  <div class="field" aria-hidden="true"></div>
 </header>
 
 </body>
 </html>
-
