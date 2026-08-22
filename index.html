@@ -4,10 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark">
-<title>http://zaya.rocks</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cutive+Mon" rel="stylesheet">
+<title>zaya.rocks</title>
 <style>
 :root { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 * { box-sizing: border-box }
@@ -31,7 +28,7 @@ body::before {
 }
 
 .prompt {
-  font-family: 'Cutive Mono', ui-monospace, monospace;;
+  font-family: 'Courier New', ui-monospace, monospace;
   font-weight: 400;
   font-size: clamp(1.6rem, 8vw, 4.5rem);
   white-space: nowrap;
@@ -43,22 +40,24 @@ body::before {
 }
 
 .zaya {
-  color: #f4d660;
-  text-shadow: 0 0 6px currentColor;
-  animation: shift 24s linear infinite;
+  background-image: linear-gradient(90deg,
+    #f4d660,#cad45d,#99d06a,#5ec97d,#00c093,#00b2a7,
+    #00a1b8,#008dc3,#0076c6,#2e5dc1,#4d44b1,#5e2b9a,#f4d660);
+  background-size: 300% 100%;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  text-shadow: 0 0 14px rgb(244 214 96 / .5);
+  animation: flow 10s linear infinite;
 }
-@keyframes shift {
-  0%   { color: #f4d660 }
-  20%  { color: #00c093 }
-  40%  { color: #0076c6 }
-  60%  { color: #5e2b9a }
-  80%  { color: #cad45d }
-  100% { color: #f4d660 }
+@keyframes flow {
+  to { background-position: -300% 0; }
 }
 
 .rocks {
   color: #baf6ff;
-  text-shadow: 0 0 3px rgb(186 246 255 / .4);
+  text-shadow: 0 0 6px rgb(186 246 255 / .45);
 }
 
 .cursor {
@@ -68,7 +67,7 @@ body::before {
 @keyframes blink { 50% { opacity: 0 } }
 
 @media (prefers-reduced-motion: reduce) {
-  .zaya { animation: none; color: #f4d660; }
+  .zaya { animation: none; background-position: 0 0; }
   .cursor { animation: none; }
 }
 </style>
